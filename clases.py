@@ -1,7 +1,9 @@
 # utilizamos 4 metodos __init__() colocar_barcos() recibir_disparo() y mostrar()
+
+import random
 import numpy as np
 
-from variables import TAMANO_TABLERO, AGUA, BARCO, JUGADOR, TOCADO, DISPARO_AGUA
+from variables import TAMANO_TABLERO, AGUA, BARCO, JUGADOR, TOCADO, DISPARO_AGUA, BARCOS
 
 class Tablero:
 
@@ -16,13 +18,21 @@ class Tablero:
             print(" ".join(fila))
 
     def colocar_barcos(self):
-        posiciones = [ (0, 0, 4),
-                       (2, 0, 3), (2, 5, 3),
-                         (4, 0, 2), (4, 3, 2), (4, 6, 2),
-                           (6, 0, 1), (6, 2, 1), (6, 4, 1), (6, 6, 1),
-                           ]
-        for fila, col, longitud in posiciones:
-            self.tablero[fila, col:col + longitud] = BARCO  
+        for longitud, cantidad in BARCOS.items():
+            for _ in range(cantidad):
+                colocado = False
+                while not colocado:
+                    if random.choice(["H", "V"]) == "H":
+                        fila = random.randint(0, TAMANO_TABLERO - 1)
+                        col = random.randint(0, TAMANO_TABLERO - longitud)
+                        zona = self.tablero[fila, col:col + longitud]
+                    else:
+                        fila = random.randint(0, TAMANO_TABLERO - longitud)
+                        col = random.randint(0, TAMANO_TABLERO - 1)
+                        zona = self.tablero[fila:fila + longitud, col]
+                    if np.all(zona == AGUA):
+                        zona[:] = BARCO
+                        colocado = True    
 
     def recibir_disparo(self, fila, columna):
         if self.disparos[fila, columna] != AGUA:
@@ -39,6 +49,12 @@ class Tablero:
 
     def quedan_barcos(self):
         return np.count_nonzero(self.tablero == BARCO) > 0
+if __name__ == "__main__":
+    for _ in range(20):
+        t = Tablero(JUGADOR)
+        t.colocar_barcos()
+        print(np.count_nonzero(t.tablero == BARCO))
+    t.mostrar()    
 
     
        
