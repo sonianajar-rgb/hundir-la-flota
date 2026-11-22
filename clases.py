@@ -63,7 +63,7 @@ class Tablero:
         # Devuelve True si queda alguna y False si no queda ninguna
         return np.count_nonzero(self.tablero == BARCO) > 0
 
-
+# es editar
 # Esta parte solo se ejecuta si lanzas clases.py directamente (es una prueba)
 # Si otro archivo importa Tablero, esta parte NO se ejecuta
 if __name__ == "__main__":
